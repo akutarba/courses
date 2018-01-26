@@ -12,7 +12,7 @@
  Если все 3 стороны равны, то треугольник равнобедренный и равносторонний, но не прямоугольный.
 =end
 
-print "Welcome, let's check triangle!. \n"
+print "Welcome, let's check triangle! \n"
 
 triangle_sides = []
 for i in 1..3 do
