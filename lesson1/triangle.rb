@@ -12,34 +12,50 @@
  Если все 3 стороны равны, то треугольник равнобедренный и равносторонний, но не прямоугольный.
 =end
 
-print "Welcome, let's check triangle! \n"
+puts "Welcome, let's check triangle! "
 
 triangle_sides = []
-for i in 1..3 do
-  print "Please enter #{i} side of triangle? "
-  triangle_sides[i - 1] = gets.chomp.to_i
+
+triangle_sides = Array.new(3) do |i|
+  print "Please enter #{i + 1} side of triangle? "
+  gets.to_f
+end
+
+def check_rectangle_triangle(a)
+  a[0] ** 2 + a[1] ** 2 == a[2] ** 2
+end
+
+def check_not_zero(sides)
+  sides[0]*sides[1]*sides[2] != 0
 end
 
 triangle_sides.sort! #сортируем в возрастающем порядке
 
-if triangle_sides[0] + triangle_sides[1] >= triangle_sides[2] #правило существования треугольника
-  if triangle_sides[0] ** 2 + triangle_sides[1] ** 2 == triangle_sides[2] ** 2 #теорема пифагора
-    if triangle_sides[0] == triangle_sides[1] # если прямоугольный, то может быть ранвтосторонним
+if triangle_sides[0] + triangle_sides[1] > triangle_sides[2] && check_not_zero(triangle_sides) #правило существования треугольника
+
+  uniq_sides = triangle_sides.uniq #вычисляем количество уникальных сторон, 3 - обычный 2 = равнобедр, 1 - равносторонний
+
+  case uniq_sides.length
+  when 2
+    if check_rectangle_triangle(triangle_sides)
       print "You have entered rectangular and isosceles triangle. "
-    else
-      print "You have entered rectangular triangle. " # или просто прямоугольный
-    end
-  elsif triangle_sides[0] == triangle_sides[1] || triangle_sides[1] == triangle_sides[2] # если не прямоугольный, то может быть равнобедренным
-    if triangle_sides[0] == triangle_sides[2] # или равносторонним
-      print "You have entered equilateral triangle. "
     else
       print "You have entered isosceles triangle. "
     end
+  when 3
+    if check_rectangle_triangle(triangle_sides)
+      print "You have entered rectangular triangle. "
+    else
+      print "You have entered simple triangle. "
+    end
+  when 1
+    print "You have entered equilateral triangle. "
   else
-    print "You have entered simple triangle. "
+    print "Triangle with provided sides doesn't exist! "
   end
 else
   print "Triangle with provided sides doesn't exist! "
 end
+
 
 print "Sides of triangle: #{triangle_sides}"

@@ -22,26 +22,33 @@ a = 1; b = −6; c = 9;
 D = (−6)2 − 4 · 1 · 9 = 36 − 36 = 0. Дискриминант равен нулю — корень будет один.
 =end
 
-print "Welcome, let's count diskriminant and roots of quadratic equation!. \n"
+puts "Welcome, let's count diskriminant and roots of quadratic equation!. "
 
 equiation_koef = []
+
+a, b, c = Array.new(3) do |i|
+  print "Please enter #{i} koefficient"
+  gets.to_i
+end
 
 for i in 1..3 do
   print "Please enter #{i} koefficient? "
   equiation_koef[i - 1] = gets.chomp.to_i
 end
 
-def diskriminant(koef)
-  koef[1] ** 2 - 4 * koef[0] * koef[2]
+def diskriminant(k)
+  k[1] ** 2 - 4 * k[0] * k[2]
 end
 
-def count_roots (koef, d)
+def calculate_roots (k, d)
+
   if d > 0
-    root1 = -koef[1] + Math.sqrt(d) / (2 * koef[0])
-    root2 = -koef[1] - Math.sqrt(d) / (2 * koef[0])
+    sqrt_d =  Math.sqrt(d)
+    root1 = -k[1] + sqrt_d / (2 * k[0])
+    root2 = -k[1] - sqrt_d / (2 * kf[0])
     [root1.to_i, root2.to_i]
   else
-    root = -koef[1]
+    root = -k[1]/ 2 * k[0]
     [root.to_i]
   end
 
