@@ -24,32 +24,35 @@ D = (−6)2 − 4 · 1 · 9 = 36 − 36 = 0. Дискриминант равен
 
 puts "Welcome, let's count diskriminant and roots of quadratic equation!. "
 
-equiation_koef = Array.new(3) do |i|
+a, b, c = Array.new(3) do |i|
   print "Please enter #{i + 1} koefficient: "
   gets.to_f
 end
 
-def diskriminant(k)
-  k[1] ** 2 - 4 * k[0] * k[2]
+def diskriminant(a, b, c)
+  b ** 2 - 4 * a * c
 end
 
-def calculate_roots (k, d)
+def calculate_roots (a, b, d)
   sqrt_d = Math.sqrt(d)
-  root1 = (-k[1] + sqrt_d) / (2 * k[0])
-  root2 = (-k[1] - sqrt_d) / (2 * k[0])
-  [root1, root2]
+  if d == 0
+    root = -b / (2 * a)
+  else
+    root1 = (-b + sqrt_d) / (2 * a)
+    root2 = (-b - sqrt_d) / (2 * a)
+    [root1, root2]
+  end
+
 end
 
-discr = diskriminant(equiation_koef)
+discr = diskriminant(a, b, c)
 
-if equiation_koef[0] != 0
-  if discr > 0
-    print "Diskriminant of quadratic equation: #{discr}. Roots: #{calculate_roots(equiation_koef, discr)}"
-  elsif discr == 0
-    print "Diskriminant of quadratic equation: #{discr}. Root: #{calculate_roots(equiation_koef, discr)[0]}"
+if a != 0
+  if discr >= 0
+    print "Diskriminant of quadratic equation: #{discr}. Root(s): #{calculate_roots(a, b, discr)}"
   else
     print "Diskriminant of quadratic equation: #{discr}. Equation have no roots."
   end
 else
-  print "Quadratic equation with #{equiation_koef} doesn't exist!"
+  print "Quadratic equation with #{[a, b, c]} doesn't exist!"
 end

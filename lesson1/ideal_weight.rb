@@ -9,7 +9,7 @@ print "What is your last name? "
 last_name = gets.chomp.capitalize
 
 print "Please enter your hight in 'sm': "
-current_hight = gets.chomp.to_i
+current_hight = gets.to_i
 
 print "Hi #{first_name} #{last_name}. "
 

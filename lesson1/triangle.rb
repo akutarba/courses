@@ -14,42 +14,37 @@
 
 puts "Welcome, let's check triangle! "
 
-triangle_sides = []
-
-triangle_sides = Array.new(3) do |i|
+sides = Array.new(3) do |i|
   print "Please enter #{i + 1} side of triangle? "
   gets.to_f
 end
 
-def check_rectangle_triangle(a)
-  a[0] ** 2 + a[1] ** 2 == a[2] ** 2
+def rectangle_triangle?(sides)
+  sides[0] ** 2 + sides[1] ** 2 == sides[2] ** 2
 end
 
-def check_not_zero(sides)
-  sides[0]*sides[1]*sides[2] != 0
-end
 
-triangle_sides.sort! #сортируем в возрастающем порядке
+sides.sort! #сортируем в возрастающем порядке
 
-if triangle_sides[0] + triangle_sides[1] > triangle_sides[2] && check_not_zero(triangle_sides) #правило существования треугольника
+if sides[0] + sides[1] > sides[2] && sides.none?(&:zero?) #правило существования треугольника
 
-  uniq_sides = triangle_sides.uniq #вычисляем количество уникальных сторон, 3 - обычный 2 = равнобедр, 1 - равносторонний
+  uniq_sides = sides.uniq #вычисляем количество уникальных сторон, 3 - обычный 2 = равнобедр, 1 - равносторонний
 
   case uniq_sides.length
+  when 1
+    print "You have entered equilateral triangle. "
   when 2
-    if check_rectangle_triangle(triangle_sides)
+    if rectangle_triangle?(sides)
       print "You have entered rectangular and isosceles triangle. "
     else
       print "You have entered isosceles triangle. "
     end
   when 3
-    if check_rectangle_triangle(triangle_sides)
+    if rectangle_triangle?(sides)
       print "You have entered rectangular triangle. "
     else
       print "You have entered simple triangle. "
     end
-  when 1
-    print "You have entered equilateral triangle. "
   else
     print "Triangle with provided sides doesn't exist! "
   end
@@ -58,4 +53,4 @@ else
 end
 
 
-print "Sides of triangle: #{triangle_sides}"
+print "Sides of triangle: #{sides}"
