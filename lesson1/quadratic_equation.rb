@@ -33,26 +33,18 @@ def diskriminant(a, b, c)
   b ** 2 - 4 * a * c
 end
 
-def calculate_roots (a, b, d)
-  sqrt_d = Math.sqrt(d)
-  if d == 0
-    root = -b / (2 * a)
-  else
-    root1 = (-b + sqrt_d) / (2 * a)
-    root2 = (-b - sqrt_d) / (2 * a)
-    [root1, root2]
-  end
-
-end
-
 discr = diskriminant(a, b, c)
 
 if a != 0
-  if discr >= 0
-    print "Diskriminant of quadratic equation: #{discr}. Root(s): #{calculate_roots(a, b, discr)}"
+  sqrt_d = Math.sqrt(discr)
+  if  discr == 0
+    print "Diskriminant of quadratic equation: #{discr}. Root: #{-b / (2 * a)}"
+  elsif discr > 0
+    print "Diskriminant of quadratic equation: #{discr}. Roots: #{[(-b + sqrt_d) / (2 * a), (-b - sqrt_d) / (2 * a)]}"
   else
     print "Diskriminant of quadratic equation: #{discr}. Equation have no roots."
   end
 else
   print "Quadratic equation with #{[a, b, c]} doesn't exist!"
 end
+
