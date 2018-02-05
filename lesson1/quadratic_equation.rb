@@ -35,7 +35,7 @@ end
 
 discr = diskriminant(a, b, c)
 
-if a != 0
+if a != 0 && discr.zero?
   sqrt_d = Math.sqrt(discr)
   if  discr == 0
     print "Diskriminant of quadratic equation: #{discr}. Root: #{-b / (2 * a)}"
