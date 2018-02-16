@@ -3,13 +3,8 @@
 f_numbers = [0, 1]
 sum = 0
 
-while sum < 100
-  sum = f_numbers[-1] + f_numbers[-2]
-  if sum < 100
-    f_numbers << sum
-  end
+while (sum =  f_numbers[-1] + f_numbers[-2]) < 100
+  f_numbers << sum
 end
 
-
 puts "Fibonacci Numbers from 0 until 100: #{f_numbers} "
-

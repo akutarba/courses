@@ -11,11 +11,11 @@ puts "Welcome, let's check number of the date: "
 puts "Please enter the date DD/MM/YYYY:"
 day, month, year = gets.chomp.split('/').map(&:to_i) #спасибо за подсказку, не разобралась как это лучше сделать сразу при вводе
 
-if year % 4 == 0 && (year % 100 != 0|| year % 400 == 0)
+if year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
   months[1] = 29
 end
 
-puts "Number of date is #{months.take(month - 1).inject(:+) + day}."
+puts "Number of date is #{months.take(month - 1).inject(0,:+) + day} "
 
 
 

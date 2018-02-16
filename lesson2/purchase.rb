@@ -20,12 +20,13 @@ loop do
   puts "Please enter the price of the #{name} :"
   price = gets.to_f
 
-  puts "and the quantity of #{name}:"
+  puts "and the quantity of #{name} :"
   quantity = gets.to_f
 
-  products[name] = {price: price, quantity: quantity}
+  products[name] = { price: price, quantity: quantity }
 end
-puts "In your shopping cart: #{products}"
+
+puts "In your shopping cart: #{products} "
 
 purchase_amount = 0
 
@@ -35,4 +36,4 @@ products.each do |name, data|
   puts "Price of #{name} is: #{sum} "
 end
 
-puts "You have spent: #{purchase_amount}"
+puts "You have spent: #{purchase_amount} "

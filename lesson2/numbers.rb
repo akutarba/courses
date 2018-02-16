@@ -7,4 +7,4 @@ while i <= 100
   i += 5
 end
 
-puts "Numbers from #{numbers.first} until #{numbers.last} with step 5: #{numbers}"
+puts "Numbers from #{numbers.first} until #{numbers.last} with step 5: #{numbers} "
