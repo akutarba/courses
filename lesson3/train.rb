@@ -98,12 +98,14 @@ end
 
 train = Train.new('123', 'pass', 23)
 
-puts train.number
+puts "Train number #{ train.number } "
+
 train.speed_up=(90)
 puts "Current speed: #{ train.current_speed } "
 
+train.attach_wagon
+puts "Number of wagons #{ train.wagons } "
+
 route = Route.new("A", "B")
-
 train.route=(route)
-
 puts "Current station #{ train.current_station } "

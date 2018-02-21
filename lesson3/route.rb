@@ -32,7 +32,4 @@ class Route
   end
 end
 
-route = Route.new("A", "B")
-
-puts route.stations_list
 
