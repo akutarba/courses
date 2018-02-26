@@ -18,21 +18,17 @@ class Station
     @trains = []
   end
 
+#Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
+  def trains_by_type(type)
+    @trains.select {|train| train == type}
+  end
+
 #Может принимать поезда (по одному за раз)
   def add_train(train)
     @trains << train
   end
 
-#Может возвращать список всех поездов на станции, находящиеся в текущий момент
-  def get_trains
-     puts "Trains on the station #{@name}: #{@trains} "
-  end
-
-#Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
-  def get_trains_by_type(type)
-    puts "#{@trains.select {|train| train == type}.length} #{type} trains"
-  end
-
+# Может отправлять поезда (по одному за раз, при этом, поезд удаляется из списка поездов, находящихся на станции).
   def remove_train(train)
     @trains.delete(train)
   end
@@ -44,7 +40,7 @@ st.add_train("gruz")
 st.add_train("pass")
 st.add_train("pass")
 
-st.get_trains
+puts st
 
 type = "pass"
-st.get_trains_by_type(type)
+st.trains_by_type(type)
