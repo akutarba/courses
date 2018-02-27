@@ -43,7 +43,6 @@ class Train
     @current_speed = 0
   end
 
-
 #Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает количество вагонов).
   def attach_wagon
     @wagons += 1 if @current_speed == 0
@@ -143,7 +142,7 @@ train = Train.new('123', 'pass', 23)
 puts "Train number #{ train.number } "
 
 train.speed_up(90)
-puts "Current speed_delta: #{ train.current_speed } "
+puts "Current speed: #{ train.current_speed } "
 
 train.attach_wagon
 puts "Number of wagons #{ train.wagons } "
