@@ -72,7 +72,7 @@ class Train
   end
 
 # возвращает следующую станцию - объект
-  def get_next_station()
+  def get_next_station
     index = current_station_index
     if index < @route.stations.length
       @route.stations[index + 1]
@@ -82,7 +82,7 @@ class Train
   end
 
 # возвращает предыдущую станцию - объект
-  def get_previous_station()
+  def get_previous_station
     index = current_station_index
     if index > 0
       @route.stations[index - 1]
