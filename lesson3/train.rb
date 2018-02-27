@@ -16,6 +16,7 @@
 Возвращать предыдущую станцию, текущую, следующую, на основе маршрута
 =end
 
+require_relative 'station'
 require_relative 'route.rb'
 
 class Train
@@ -34,9 +35,7 @@ class Train
 
 # Может набирать скорость
   def speed_up(speed_delta)
-    if speed_delta >= 0
-      @current_speed += speed_delta
-    end
+    @current_speed += speed_delta if speed_delta >= 0
   end
 
 #  Может тормозить (сбрасывать скорость до нуля)
@@ -62,56 +61,78 @@ class Train
   end
 
 #  Может принимать маршрут следования (объект класса Route).
-  def route(route)
+  def route=(route)
     @route = route
     @current_station = @route.stations[0]
   end
 
+# индекс текущей станции в маршруте
   def current_station_index
     @route.stations.index(@current_station)
+  end
+
+# возвращает следующую станцию - объект
+  def get_next_station()
+    index = current_station_index
+    if index < @route.stations.length
+      @route.stations[index + 1]
+    else
+      nil
+    end
+  end
+
+# возвращает предыдущую станцию - объект
+  def get_previous_station()
+    index = current_station_index
+    if index > 0
+      @route.stations[index - 1]
+    else
+      nil
+    end
   end
 
 # Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад,
 # но только на 1 станцию за раз.
 
-  def last_index
-    @route.stations.length - 1
-  end
-
 
   def run_next_station
-    index = current_station_index
-    last = last_index
-    if index != last
-      index += 1
-      # здесь я хочу проверить, что станция не была предпоследней, потому что иначе нет следующей, а только меняется текущая и предпоследняя
-      if index != last
-        @next_station = @route.stations[index + 1] # сдвигаю следующую за текущей
-        @previous_station = @current_station # делаю предыдущую текущей
-        @current_station = @route.stations[index] # сдвигаю текущую на один
-      else
-        @previous_station = @current_station # делаю предыдущую текущей
-        @current_station = @route.stations[index] # сдвигаю текущую на один и она становится последней
-      end
+    # вычисляем следующую станцию
+    next_station = get_next_station
+
+    if next_station != nil # если она не последняя идем дальше
+      # Запоминаем текущую станцию
+      old_current_station = @current_station
+
+      # переставляем текущую станцию на следующую
+      @current_station = next_station
+
+      # удаляем поезд со прошлой текущей станции
+      old_current_station.remove_train(self)
+
+      # добавляем поезд на следующую станцию
+      next_station.add_train(self)
     else
-      print "You have arrived to the last station of the route! "
+      print "You are on the last station of the route! "
     end
   end
 
   def run_previous_station
-    index = current_station_index
-    if !(index.zero?) # index не ноль, то не первый элемент массива
-      index -= 1
+    # вычисляем предыдущую станцию
+    previous_station = get_previous_station
 
-      # здесь я хочу проверить, что станция не была второй, потому что иначе нет предыдущей, а только меняется текущая и след за ней
-      if !(index.zero?) # index не ноль, то есть снова не первый элемент массива. получилось дважды одно и то же, но не знаю как лучше сделать
-        @previous_station = @route.stations[index - 1]
-        @current_station = @route.stations[index]
-        @next_station = @current_station
-      else
-        @current_station = @route.stations[index]
-        @next_station = @current_station
-      end
+    if previous_station != nil # если станция не первая
+
+      # Запоминаем текущую станцию
+      old_current_station = @current_station
+
+      # переставляем текущую станцию на предыдущую
+      @current_station = previous_station
+
+      # удаляем поезд со прошлой текущей станции
+      old_current_station.remove_train(self)
+
+      # добавляем поезд на предыдущую станцию
+      previous_station.add_train(self)
     else
       print "You are  on the first station of the route! "
     end
@@ -129,20 +150,28 @@ puts "Current speed_delta: #{ train.current_speed } "
 train.attach_wagon
 puts "Number of wagons #{ train.wagons } "
 
-route = Route.new("A", "B")
-train.route(route)
-route.add_station(station: "C")
-route.add_station(station: "D")
+st_first = Station.new("A")
+st_last = Station.new("B")
+
+route = Route.new(st_first, st_last)
+
+train.route = route
+route.add_station(Station.new("C"))
+route.add_station(Station.new("D"))
 
 puts "Current route #{ route.stations }"
 puts "Current station #{ train.current_station }"
 
-(route.stations.length).times do
-  train.run_next_station
-  puts "Current station #{ train.current_station }"
-end
+train.run_next_station
 
-(route.stations.length).times do
-  train.run_previous_station
-  puts "Current station #{ train.current_station }"
-end
+train.run_previous_station
+
+# (route.stations.length).times do
+#   train.run_next_station
+#   puts "Current station #{ train.current_station}"
+# end
+#
+# (route.stations.length).times do
+#   train.run_previous_station
+#   puts "Current station #{ train.current_station }"
+# end

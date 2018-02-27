@@ -8,6 +8,7 @@
 
 =end
 
+
 class Station
 
   attr_reader :trains
@@ -20,7 +21,7 @@ class Station
 
 #Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
   def trains_by_type(type)
-    @trains.select {|train| train == type}
+    @trains.select {|train| train.type == type}
   end
 
 #Может принимать поезда (по одному за раз)
@@ -36,9 +37,9 @@ class Station
 end
 
 st = Station.new("Munchen")
-st.add_train("gruz")
-st.add_train("pass")
-st.add_train("pass")
+# st.add_train(Train.new(12, 'gruz', 23))
+# st.add_train(Train.new(12, 'gruz', 23))
+# st.add_train(Train.new(12, 'gruz', 23))
 
 puts st
 
