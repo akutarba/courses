@@ -24,7 +24,7 @@ class Train
 # может возвращать номер поезда, его тип, текущую скорость, количество вагонов,
 # текущую станцию, следующую и предыдущую станции
 
-  attr_reader :number, :type, :current_speed, :wagons, :current_station, :next_station, :previous_station
+  attr_reader :number, :type, :current_speed, :wagons, :current_station
 
   def initialize(number, type, wagons)
     @number = number
