@@ -37,9 +37,6 @@ class Station
 end
 
 st = Station.new("Munchen")
-# st.add_train(Train.new(12, 'gruz', 23))
-# st.add_train(Train.new(12, 'gruz', 23))
-# st.add_train(Train.new(12, 'gruz', 23))
 
 puts st
 
