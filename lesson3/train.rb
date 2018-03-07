@@ -17,14 +17,14 @@
 =end
 
 require_relative 'station'
-require_relative 'route.rb'
+require_relative 'route'
 
 class Train
 
 # может возвращать номер поезда, его тип, текущую скорость, количество вагонов,
 # текущую станцию, следующую и предыдущую станции
 
-  attr_reader :number, :type, :current_speed, :wagons, :current_station
+  attr_reader :number, :type, :current_speed, :wagons, :current_station_index
 
   def initialize(number, type, wagons)
     @number = number
@@ -50,92 +50,66 @@ class Train
 
 # Может отцеплять вагоны
   def detach_waggon
-    if @wagons == 0
-      puts "You cannot detach a wagon, the train is empty!"
-    elsif @current_speed == 0
-      @waggons -= 1
-    end
+    return if @wagons.zero? || @current_speed.nonzero?
+    @waggons -= 1
   end
 
 #  Может принимать маршрут следования (объект класса Route).
   def route=(route)
     @route = route
-    @current_station = @route.stations[0]
+    @current_station_index = 0
   end
 
-# индекс текущей станции в маршруте
-  def current_station_index
-    @route.stations.index(@current_station)
-  end
 
 # возвращает следующую станцию - объект
-  def get_next_station
-    index = current_station_index
-    if index < @route.stations.length
-      @route.stations[index + 1]
-    else
-      nil
-    end
+  def next_station
+    @route.stations[@current_station_index + 1]
   end
 
 # возвращает предыдущую станцию - объект
   def get_previous_station
-    index = current_station_index
-    if index > 0
-      @route.stations[index - 1]
-    else
-      nil
+    if @current_station_index.nonzero?
+      @route.stations[@current_station_index - 1]
     end
+  end
+
+  def current_station
+    @route.stations[@current_station_index]
   end
 
 # Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад,
 # но только на 1 станцию за раз.
 
-
   def run_next_station
-    # вычисляем следующую станцию
-    next_station = get_next_station
 
-    if next_station != nil # если она не последняя идем дальше
-      # Запоминаем текущую станцию
-      old_current_station = @current_station
+    return if next_station.nil? # если следующая станция не последняя идем дальше, если последняя выходим из метода
 
-      # переставляем текущую станцию на следующую
-      @current_station = next_station
+    # удаляем поезд с текущей станции
+    current_station.remove_train(self)
 
-      # удаляем поезд со прошлой текущей станции
-      old_current_station.remove_train(self)
+    # сдвигаем индекс вперед
+    @current_station_index += 1
 
-      # добавляем поезд на следующую станцию
-      next_station.add_train(self)
-    else
-      print "You are on the last station of the route! "
-    end
+    # добавляем поезд на станцию прибытия
+    current_station.add_train(self)
   end
 
   def run_previous_station
-    # вычисляем предыдущую станцию
-    previous_station = get_previous_station
 
-    if previous_station != nil # если станция не первая
+    return if get_previous_station.nil?
 
-      # Запоминаем текущую станцию
-      old_current_station = @current_station
+    # удаляем поезд с текущей станции
+    current_station.remove_train(self)
 
-      # переставляем текущую станцию на предыдущую
-      @current_station = previous_station
+    # индекс влево
+    @current_station_index -= 1
 
-      # удаляем поезд со прошлой текущей станции
-      old_current_station.remove_train(self)
+    # добавляем поезд на станцию прибытия
+    current_station.add_train(self)
 
-      # добавляем поезд на предыдущую станцию
-      previous_station.add_train(self)
-    else
-      print "You are  on the first station of the route! "
-    end
   end
-
 end
+
 
 train = Train.new('123', 'pass', 23)
 
@@ -162,13 +136,3 @@ puts "Current station #{ train.current_station }"
 train.run_next_station
 
 train.run_previous_station
-
-# (route.stations.length).times do
-#   train.run_next_station
-#   puts "Current station #{ train.current_station}"
-# end
-#
-# (route.stations.length).times do
-#   train.run_previous_station
-#   puts "Current station #{ train.current_station }"
-# end
