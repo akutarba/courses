@@ -110,29 +110,3 @@ class Train
   end
 end
 
-
-train = Train.new('123', 'pass', 23)
-
-puts "Train number #{ train.number } "
-
-train.speed_up(90)
-puts "Current speed: #{ train.current_speed } "
-
-train.attach_wagon
-puts "Number of wagons #{ train.wagons } "
-
-st_first = Station.new("A")
-st_last = Station.new("B")
-
-route = Route.new(st_first, st_last)
-
-train.route = route
-route.add_station(Station.new("C"))
-route.add_station(Station.new("D"))
-
-puts "Current route #{ route.stations }"
-puts "Current station #{ train.current_station }"
-
-train.run_next_station
-
-train.run_previous_station

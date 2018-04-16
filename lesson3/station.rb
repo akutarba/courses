@@ -35,10 +35,3 @@ class Station
   end
 
 end
-
-st = Station.new("Munchen")
-
-puts st
-
-type = "pass"
-st.trains_by_type(type)
