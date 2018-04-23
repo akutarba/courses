@@ -26,11 +26,12 @@ class Train
 
   attr_reader :number, :type, :current_speed, :wagons, :current_station_index
 
-  def initialize(number, type, wagons)
+  def initialize(number, type)
     @number = number
     @type = type
-    @wagons = wagons
+    @wagons = []
     @current_speed = 0
+    @current_station_index = 0
   end
 
 # Может набирать скорость
@@ -44,20 +45,38 @@ class Train
   end
 
 #Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает количество вагонов).
-  def attach_wagon
-    @wagons += 1 if @current_speed == 0
+# def attach_wagon
+#   @wagons += 1 if @current_speed == 0
+# end
+
+#добавляет в массив вагонов
+  def add_wagon(wagon)
+    @wagons << wagon
   end
 
-# Может отцеплять вагоны
-  def detach_waggon
-    return if @wagons.zero? || @current_speed.nonzero?
-    @waggons -= 1
+# удаляет из массива вагонов
+  def remove_wagon(wagon)
+    @wagons.delete(wagon)
   end
+
+# Может отцеплять вагоны (старый метод, когда вагоны измерялись в штуках)
+#   def detach_wagon
+#     return if @wagons.zero? || @current_speed.nonzero?
+#     @wagons -= 1
+#   end
 
 #  Может принимать маршрут следования (объект класса Route).
   def route=(route)
     @route = route
     @current_station_index = 0
+   # при установке маршрута, добавляем поезд на станцию
+    @route.stations[@current_station_index].add_train(self)
+    puts "#{@route.stations}"
+  end
+
+  def set_route(route)
+    current_station.remove_train(self) if @route
+    @route = route
   end
 
 
@@ -93,6 +112,8 @@ class Train
 
     # добавляем поезд на станцию прибытия
     current_station.add_train(self)
+
+    puts "Current station for #{self} is #{current_station}"
   end
 
   def run_previous_station
@@ -107,6 +128,8 @@ class Train
 
     # добавляем поезд на станцию прибытия
     current_station.add_train(self)
+
+    puts "Current station for #{self} is #{current_station}"
 
   end
 end
