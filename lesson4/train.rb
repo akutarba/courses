@@ -71,8 +71,8 @@ class Train
     @current_station_index = 0
    # при установке маршрута, добавляем поезд на станцию
     @route.stations[@current_station_index].add_train(self)
-    puts "#{@route.stations}"
   end
+
 
   def set_route(route)
     current_station.remove_train(self) if @route
