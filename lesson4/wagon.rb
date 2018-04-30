@@ -1,8 +1,10 @@
 class Wagon
-  attr_reader  :number, :type
+  attr_reader  :type
 
-  def initialize(train_number, wagon_type)
-    @number = train_number
+  def initialize(wagon_type)
     @type = wagon_type
+  end
+  def to_s
+    @type
   end
 end

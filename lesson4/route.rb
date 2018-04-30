@@ -16,7 +16,9 @@ class Route
   def initialize(first_station, last_station)
     @stations = [first_station, last_station]
   end
-
+ def to_s
+   @stations.join(",")
+ end
   #  Может добавлять промежуточную станцию в список
   def add_station(station)
     @stations.insert(-2, station)

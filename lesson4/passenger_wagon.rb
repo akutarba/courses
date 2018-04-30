@@ -2,7 +2,7 @@ require_relative 'wagon'
 
 class PassengerWagon < Wagon
 
-  def initialize(train_number)
-    super(train_number, 'passenger')
+  def initialize
+    super('passenger')
   end
 end

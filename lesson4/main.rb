@@ -35,27 +35,25 @@ require_relative 'passenger_wagon'
 class Main
 
   def select_actions_menu
-    puts("
+    puts(<<-HEREDOC)
+
 Select action from menu:
 
 Stations:
   (1)Create station
   (2)List of stations
-
 Routes:
   (3)Create route
   (4)Edit route
   (5)Set route to the train
-
 Trains:
   (6)Create train
-  (7)Add/remove wagons to train
+  (7)Add wagon to train
   (8)Move train to the station
   (9)List trains on selected station
 
   (10) Exit
-")
-#    gets.chomp
+    HEREDOC
     run_action(gets.chomp)
   end
 
@@ -81,13 +79,12 @@ Trains:
       show_all_trains_on_station
     when 10
       puts 'Good bye!'
+      return :exit
     else
       select_actions_menu
     end
   end
 
-
-  private
 
   def initialize
     @stations = []
@@ -95,17 +92,23 @@ Trains:
     @trains = []
   end
 
+  def run_main
+    while select_actions_menu != :exit
+      run_action(select_actions_menu)
+    end
+  end
+
+  private
+
 # создает новую станцию и добавляет ее в массив станций
   def create_station
     puts 'Please provide station name:'
     station_name = gets.chomp
-    if !station_name.to_s.empty?
+    if !station_name.empty?
       @stations << Station.new(station_name)
-      puts "Station '#{station_name}' was created. See all available: #{@stations} "
-      select_actions_menu
+      puts "Station '#{station_name}' was created. See all available: #{@stations.join(',')} "
     else
-      puts 'Input is empty. Please, provide the name of station.'
-      add_station
+      puts 'Input is empty. Please, try again.'
     end
   end
 
@@ -121,33 +124,42 @@ Trains:
     if type == '2'
       @trains << PassengerTrain.new(train_number)
     end
-    puts "Train #{train_number} was created. See all available #{@trains}"
-    select_actions_menu
+    puts "Train #{train_number} was created. See all available: #{@trains.join(', ')}"
+  end
+
+  def create_wagon_by_type(type)
+    case type
+    when :cargo
+      CargoWagon.new
+    when :passenger
+      PassengerWagon.new
+    else
+      "Cannot create Wagon with type #{type}"
+    end
   end
 
 #добавляем вагон к поезду согласно типу поезда - соответствующий тип вагона
   def edit_train_wagons
     if @trains.empty?
       puts 'There are no trains yet.'
+      return
+    end
+    puts "Select train: "
+    selected_train = select_from_array(@trains)
+    puts "Select action with train: add wagon(1), remove wagon(2)"
+    action = gets.chomp.to_i
+    case action
+    when 1 then
+      new_wagon = create_wagon_by_type(selected_train.type)
+      selected_train.add_wagon(new_wagon)
+      puts "Wagon with type #{new_wagon} was added to the train #{selected_train}."
+    when 2 then
+      puts "Select wagon from available: "
+      selected_wagon = select_from_array(selected_train.wagons)
+      selected_train.remove_wagon(selected_wagon)
+      puts "In the train #{selected_train} left #{selected_train.wagons} wagons"
     else
-      selected_train = select_from_array(@trains)
-      new_wagon = Wagon.new(selected_train.number, selected_train.type)
-      puts "Select action with train: add wagon(1), remove wagon(2)"
-      action = gets.chomp.to_i
-      case action
-      when 1 then
-        selected_train.add_wagon(new_wagon)
-        puts "#{new_wagon} was added to the #{selected_train.number} train. See: #{selected_train.wagons}"
-        select_actions_menu
-      when 2 then
-        selected_train = select_from_array(@trains)
-        selected_wagon = select_from_array(selected_train.wagons)
-        selected_train.remove_wagon(selected_wagon)
-        puts "In the train #{selected_train} left #{selected_train.wagons} wagons"
-        select_actions_menu
-      else
-        select_actions_menu
-      end
+      puts "Input was incorrect. Please try again."
     end
   end
 
@@ -155,12 +167,8 @@ Trains:
 # общий метод для выбора элемента из массива (для массива станций, маршрутов и поездов из main.rb)
   def select_from_array(array)
     return if array.empty?
-    array.each_with_index do |arr, index|
-      if arr.class.method_defined? :name
-        puts "#{arr.name.to_s} (#{index + 1}) "
-      else
-        puts "#{arr} (#{index + 1}) "
-      end
+    array.each.with_index(1) do |element, index|
+      puts "#{element} (#{index})"
     end
     array[gets.chomp.to_i - 1]
   end
@@ -168,7 +176,6 @@ Trains:
   def create_route
     if @stations.size < 2
       puts 'There are not enough stations to create a route.'
-      select_actions_menu
     else
       puts 'Select first station of route:'
 
@@ -182,15 +189,13 @@ Trains:
 
       #создаю маршрут
       @routes << Route.new(first_station, last_station)
-      puts "New route was created. See all available : #{@routes}"
+      puts "New route was created. See all available: #{@routes}"
     end
-    select_actions_menu
   end
 
   def edit_route
     if @routes.empty?
       puts 'There are no routes to edit'
-      select_actions_menu
     else
       puts 'Select route to edit: '
       selected_route = select_from_array(@routes)
@@ -202,7 +207,7 @@ Trains:
       when 2 then
         remove_stations_from_route(selected_route)
       else
-        select_actions_menu
+        puts 'Input was incorrect. PLease try again.'
       end
     end
   end
@@ -218,7 +223,6 @@ Trains:
       route.add_station(selected_station)
       puts "Station was added to the route: #{route}. See updated route: #{route.stations}"
     end
-    select_actions_menu
   end
 
 
@@ -230,7 +234,6 @@ Trains:
       route.remove_station(selected_station)
       puts "Station was removed from route: #{route}. See updated route: #{route.stations}"
     end
-    select_actions_menu
   end
 
 # отправить поезд на след или предыдущую станцию маршрута
@@ -238,7 +241,7 @@ Trains:
     if @trains.empty?
       puts 'There are no trains to move. Please, create one.'
     else
-      puts 'Select train '
+      puts 'Select train: '
       selected_train = select_from_array(@trains)
 
       puts "Select action for #{selected_train}: move to next(1) or to previous(2) station"
@@ -252,7 +255,6 @@ Trains:
         "Entered option was not found."
       end
     end
-    select_actions_menu
   end
 
 # назначить маршрут поезду
@@ -266,35 +268,32 @@ Trains:
       selected_train = select_from_array(@trains)
       puts "Choose route to assign #{selected_train}"
       selected_route = select_from_array(@routes)
-      # инициализирую маршрут у поезда (почему-то без этого у меня маршрут оказывает nil и не получается использовать set_route.
-      # не совсем поняла что я делаю не так)
+      #  устанавливаю маршрут
       selected_train.route = (selected_route)
-      # устанавливаю маршрут
-      selected_train.set_route(selected_route)
-
       puts "Train #{selected_train} have #{selected_route} now."
     end
-    select_actions_menu
   end
 
 # все поезда на станции
   def show_all_trains_on_station
-    # в задании есть такой пункт, но у меня на самом деле не получилось его сделать правильно
-    puts "Please select station to show all trains"
+    puts "Please select station to show all trains."
     station = select_from_array(@stations)
-    puts "All trains on the station#{station.trains}"
+    puts "All trains on the station #{station.trains}"
   end
 
 # все станции
   def list_all_stations
-    puts "List of all stations:  #{@stations} "
-    select_actions_menu
+    puts "List of all stations:  #{@stations.join(', ')} "
   end
 
 
 end
 
-start = Main.new
+
+app = Main.new
+
+app.run_main
 
 
-start.run_action(start.select_actions_menu)
+
+

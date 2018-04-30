@@ -19,6 +19,9 @@ class Station
     @trains = []
   end
 
+  def to_s
+    @name
+  end
 #Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
   def trains_by_type(type)
     @trains.select {|train| train.type == type}

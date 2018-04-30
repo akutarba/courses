@@ -34,6 +34,11 @@ class Train
     @current_station_index = 0
   end
 
+  def to_s
+    @number
+  end
+
+
 # Может набирать скорость
   def speed_up(speed_delta)
     @current_speed += speed_delta if speed_delta >= 0
@@ -51,11 +56,12 @@ class Train
 
 #добавляет в массив вагонов
   def add_wagon(wagon)
-    @wagons << wagon
+    @wagons << wagon if @current_speed == 0
   end
 
 # удаляет из массива вагонов
   def remove_wagon(wagon)
+    return if @wagons.empty? || @current_speed.nonzero?
     @wagons.delete(wagon)
   end
 
