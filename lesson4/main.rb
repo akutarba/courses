@@ -35,24 +35,24 @@ require_relative 'passenger_wagon'
 class Main
 
   def select_actions_menu
-    puts(<<-HEREDOC)
+    puts(<<~HEREDOC)
 
-Select action from menu:
+      Select action from menu:
 
-Stations:
-  (1)Create station
-  (2)List of stations
-Routes:
-  (3)Create route
-  (4)Edit route
-  (5)Set route to the train
-Trains:
-  (6)Create train
-  (7)Add wagon to train
-  (8)Move train to the station
-  (9)List trains on selected station
+      Stations:
+        (1)Create station
+        (2)List of stations
+      Routes:
+        (3)Create route
+        (4)Edit route
+        (5)Set route to the train
+      Trains:
+        (6)Create train
+        (7)Add/remove wagons to train
+        (8)Move train to the station
+        (9)List trains on selected station
 
-  (10) Exit
+        (10) Exit
     HEREDOC
     run_action(gets.chomp)
   end
@@ -127,15 +127,18 @@ Trains:
     puts "Train #{train_number} was created. See all available: #{@trains.join(', ')}"
   end
 
-  def create_wagon_by_type(type)
-    case type
-    when :cargo
+  def create_wagon
+    puts "Select wagon type to create: cargo(1) passenger (2): "
+    action = gets.to_i
+    case action
+    when 1
       CargoWagon.new
-    when :passenger
+    when 2
       PassengerWagon.new
     else
-      "Cannot create Wagon with type #{type}"
+      puts "Input is incorrect. Please provide the correct type of wagon."
     end
+
   end
 
 #добавляем вагон к поезду согласно типу поезда - соответствующий тип вагона
@@ -150,9 +153,8 @@ Trains:
     action = gets.chomp.to_i
     case action
     when 1 then
-      new_wagon = create_wagon_by_type(selected_train.type)
+      new_wagon = create_wagon
       selected_train.add_wagon(new_wagon)
-      puts "Wagon with type #{new_wagon} was added to the train #{selected_train}."
     when 2 then
       puts "Select wagon from available: "
       selected_wagon = select_from_array(selected_train.wagons)

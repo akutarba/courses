@@ -54,14 +54,24 @@ class Train
 #   @wagons += 1 if @current_speed == 0
 # end
 
-#добавляет в массив вагонов
+# возвращает true если тип вагона и поезда совпали
+  def relevant_wagon? (wagon)
+    wagon.type == @type
+  end
+
+#добавляет в массив вагонов, проверяет на соответствие типа вагона и поезда
   def add_wagon(wagon)
-    @wagons << wagon if @current_speed == 0
+    if @current_speed == 0 && relevant_wagon?(wagon)
+      @wagons << wagon
+      puts "New wagon was added to the '#{@type}' train."
+    else
+      puts "Cannot add '#{wagon.type}' wagon to the '#{@type}' train!"
+    end
   end
 
 # удаляет из массива вагонов
   def remove_wagon(wagon)
-    return if @wagons.empty? || @current_speed.nonzero?
+    return if @current_speed.nonzero?
     @wagons.delete(wagon)
   end
 
@@ -75,14 +85,8 @@ class Train
   def route=(route)
     @route = route
     @current_station_index = 0
-   # при установке маршрута, добавляем поезд на станцию
+    # при установке маршрута, добавляем поезд на станцию
     @route.stations[@current_station_index].add_train(self)
-  end
-
-
-  def set_route(route)
-    current_station.remove_train(self) if @route
-    @route = route
   end
 
 
