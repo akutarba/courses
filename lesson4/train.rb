@@ -61,12 +61,7 @@ class Train
 
 #добавляет в массив вагонов, проверяет на соответствие типа вагона и поезда
   def add_wagon(wagon)
-    if @current_speed == 0 && relevant_wagon?(wagon)
-      @wagons << wagon
-      puts "New wagon was added to the '#{@type}' train."
-    else
-      puts "Cannot add '#{wagon.type}' wagon to the '#{@type}' train!"
-    end
+    @wagons << wagon if @current_speed == 0 && relevant_wagon?(wagon)
   end
 
 # удаляет из массива вагонов
