@@ -26,12 +26,11 @@
 
 require_relative 'train'
 require_relative 'station'
-require_relative '../lesson4/route'
+require_relative 'route'
 require_relative 'cargo_train'
 require_relative 'passenger_train'
 require_relative 'cargo_wagon'
 require_relative 'passenger_wagon'
-require_relative 'vendor'
 
 class Main
 
@@ -310,7 +309,7 @@ passenger_train = PassengerTrain.new('333')
 wagon = PassengerWagon.new
 wagon.vendor_name = 'Vendor3'
 
-puts wagon.vendor_name
+puts "Vendor of #{wagon} is #{wagon.vendor_name}"
 
 puts Train.find('111')
 puts "Number of trains:  #{Train.instances}"
