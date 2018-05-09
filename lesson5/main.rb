@@ -59,29 +59,29 @@ class Main
 
   def run_action(action)
     case action.to_i
-    when 1
-      create_station
-    when 2
-      list_all_stations
-    when 3
-      create_route
-    when 4
-      edit_route
-    when 5
-      assign_route_to_train
-    when 6
-      create_train
-    when 7
-      edit_train_wagons
-    when 8
-      move_train
-    when 9
-      show_all_trains_on_station
-    when 10
-      puts 'Good bye!'
-      return :exit
-    else
-      select_actions_menu
+      when 1
+        create_station
+      when 2
+        list_all_stations
+      when 3
+        create_route
+      when 4
+        edit_route
+      when 5
+        assign_route_to_train
+      when 6
+        create_train
+      when 7
+        edit_train_wagons
+      when 8
+        move_train
+      when 9
+        show_all_trains_on_station
+      when 10
+        puts 'Good bye!'
+        return :exit
+      else
+        select_actions_menu
     end
   end
 
@@ -102,19 +102,18 @@ class Main
 
 # создает новую станцию и добавляет ее в массив станций
   def create_station
-    puts 'Please provide station name:'
+    puts 'Please provide station name (possible letters and numbers):'
     station_name = gets.chomp
-    if !station_name.empty?
-      @stations << Station.new(station_name)
-      puts "Station '#{station_name}' was created. See all available: #{@stations.join(',')} "
-    else
-      puts 'Input is empty. Please, try again.'
-    end
+    @stations << Station.new(station_name)
+    puts "Station '#{station_name}' was created. All stations: #{@stations.join(',')} "
+  rescue StandardError => e
+    puts e
+    retry
   end
 
 #создает новый поезд с указанным типом, добавляет в массив поездов
   def create_train
-    puts 'Provide new train number: '
+    puts 'Provide new train number in format NNN-NN or NNNNN (N - number or letter): '
     train_number = gets.chomp
     puts "Select cargo (1) or passenger(2) train: "
     type = gets.chomp
@@ -124,19 +123,23 @@ class Main
     if type == '2'
       @trains << PassengerTrain.new(train_number)
     end
-    puts "Train #{train_number} was created. See all available: #{@trains.join(', ')}"
+    puts "Train #{train_number} was created. All trains: #{@trains.join(', ')}"
+  rescue StandardError => e
+    puts e
+    retry
   end
+
 
   def create_wagon
     puts "Select wagon type to create: cargo(1) passenger (2): "
     action = gets.to_i
     case action
-    when 1
-      CargoWagon.new
-    when 2
-      PassengerWagon.new
-    else
-      puts "Input is incorrect. Please provide the correct type of wagon."
+      when 1
+        CargoWagon.new
+      when 2
+        PassengerWagon.new
+      else
+        puts "Input is incorrect. Please provide the correct type of wagon."
     end
 
   end
@@ -152,16 +155,16 @@ class Main
     puts "Select action with train: add wagon(1), remove wagon(2)"
     action = gets.chomp.to_i
     case action
-    when 1 then
-      new_wagon = create_wagon
-      selected_train.add_wagon(new_wagon)
-    when 2 then
-      puts "Select wagon from available: "
-      selected_wagon = select_from_array(selected_train.wagons)
-      selected_train.remove_wagon(selected_wagon)
-      puts "In the train #{selected_train} left #{selected_train.wagons} wagons"
-    else
-      puts "Input was incorrect. Please try again."
+      when 1 then
+        new_wagon = create_wagon
+        selected_train.add_wagon(new_wagon)
+      when 2 then
+        puts "Select wagon from available: "
+        selected_wagon = select_from_array(selected_train.wagons)
+        selected_train.remove_wagon(selected_wagon)
+        puts "In the train #{selected_train} left #{selected_train.wagons} wagons"
+      else
+        puts "Input was incorrect. Please try again."
     end
   end
 
@@ -204,12 +207,12 @@ class Main
       puts "Select action with route: add station(1), remove station(2)"
       action = gets.chomp.to_i
       case action
-      when 1 then
-        add_stations_to_route(selected_route)
-      when 2 then
-        remove_stations_from_route(selected_route)
-      else
-        puts 'Input was incorrect. PLease try again.'
+        when 1 then
+          add_stations_to_route(selected_route)
+        when 2 then
+          remove_stations_from_route(selected_route)
+        else
+          puts 'Input was incorrect. PLease try again.'
       end
     end
   end
@@ -249,12 +252,12 @@ class Main
       puts "Select action for #{selected_train}: move to next(1) or to previous(2) station"
       action = gets.chomp.to_i
       case action
-      when 1 then
-        selected_train.run_next_station
-      when 2 then
-        selected_train.run_previous_station
-      else
-        "Entered option was not found."
+        when 1 then
+          selected_train.run_next_station
+        when 2 then
+          selected_train.run_previous_station
+        else
+          "Entered option was not found."
       end
     end
   end
@@ -292,37 +295,37 @@ class Main
 end
 
 
-# app = Main.new
+app = Main.new
+
+app.run_main
+
+
+# train = Train.new('111', 'passenger')
+# train.vendor_name = 'Vendor1'
 #
-# app.run_main
-
-
-train = Train.new('111', 'passenger')
-train.vendor_name = 'Vendor1'
-
-cargo_train = CargoTrain.new('222')
-cargo_train1 = CargoTrain.new('222')
-cargo_train.vendor_name = 'Vendor2'
-
-passenger_train = PassengerTrain.new('333')
-
-wagon = PassengerWagon.new
-wagon.vendor_name = 'Vendor3'
-
-puts "Vendor of #{wagon} is #{wagon.vendor_name}"
-
-puts Train.find('111')
-puts "Number of trains:  #{Train.instances}"
-puts "Number of CargoTrains #{CargoTrain.instances}"
-
-station1 = Station.new('Station1')
-station2 = Station.new('Station2')
-
-puts "Number of Stations: #{Station.instances}"
-
-route = Route.new(station1, station2)
-puts "Number of Routes: #{Route.instances}"
-
-puts Station.all
+# cargo_train = CargoTrain.new('222')
+# cargo_train1 = CargoTrain.new('222')
+# cargo_train.vendor_name = 'Vendor2'
+#
+# passenger_train = PassengerTrain.new('333')
+#
+# wagon = PassengerWagon.new
+# wagon.vendor_name = 'Vendor3'
+#
+# puts "Vendor of #{wagon} is #{wagon.vendor_name}"
+#
+# puts Train.find('111')
+# puts "Number of trains:  #{Train.instances}"
+# puts "Number of CargoTrains #{CargoTrain.instances}"
+#
+# station1 = Station.new('Station1')
+# station2 = Station.new('Station2')
+#
+# puts "Number of Stations: #{Station.instances}"
+#
+# route = Route.new(station1, station2)
+# puts "Number of Routes: #{Route.instances}"
+#
+# puts Station.all
 
 

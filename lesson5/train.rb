@@ -20,10 +20,14 @@ require_relative 'station'
 require_relative 'route'
 require_relative 'vendor'
 require_relative 'instance_counter'
+require_relative 'validation'
 
 class Train
   include Vendor
   include InstanceCounter
+  include Validation
+
+  NUMBER_TEMPLATE = /^[a-z\d]{3}-?[a-z\d]{2}$/i
 
   @@trains = {}
 
@@ -36,6 +40,7 @@ class Train
 
   def initialize(number, type)
     @number = number
+    validate!(number, NUMBER_TEMPLATE)
     @type = type
     @wagons = []
     @current_speed = 0
@@ -48,7 +53,11 @@ class Train
     @number
   end
 
-
+  def valid?
+    validate!(self.number, NUMBER_FORMAT)
+  rescue
+    false
+  end
 # Может набирать скорость
   def speed_up(speed_delta)
     @current_speed += speed_delta if speed_delta >= 0
@@ -128,7 +137,6 @@ class Train
     # добавляем поезд на станцию прибытия
     current_station.add_train(self)
 
-    puts "Current station for #{self} is #{current_station}"
   end
 
   def run_previous_station
@@ -143,8 +151,6 @@ class Train
 
     # добавляем поезд на станцию прибытия
     current_station.add_train(self)
-
-    puts "Current station for #{self} is #{current_station}"
 
   end
 
