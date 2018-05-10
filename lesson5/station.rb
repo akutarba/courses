@@ -18,7 +18,7 @@ class Station
 
   NAME_TEMPLATE = /^\w+/
 
-  attr_reader :trains
+  attr_reader :trains, :name
   #заводим инстанс переменную класса куда складываем все станции
   @@stations = []
 
@@ -29,8 +29,8 @@ class Station
   #Имеет название, которое указывается при ее создании
   def initialize(name)
     @name = name
-    validate!(name, NAME_TEMPLATE)
     @trains = []
+    validate!
     @@stations << self # при инициализации добавляем станцию в инстанс переменную класса, таким образом у нас будет там полный список
     register_instance
   end
@@ -39,10 +39,13 @@ class Station
     @name
   end
 
-  def valid?
-    validate!(self.name, NAME_TEMPLATE)
-  rescue
-    false
+  protected
+
+  def validate!
+    raise 'Station name is nil!' if @name.nil?
+    raise 'Wrong format of station name!' if @name !~ NAME_TEMPLATE
+    raise 'There is a station with this name already!' if @@stations.detect {|item| item.name == self.name}
+    true
   end
 
   #Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских

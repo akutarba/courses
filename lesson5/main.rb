@@ -106,8 +106,8 @@ class Main
     station_name = gets.chomp
     @stations << Station.new(station_name)
     puts "Station '#{station_name}' was created. All stations: #{@stations.join(',')} "
-  rescue StandardError => e
-    puts e
+  rescue => e
+    puts e.message
     retry
   end
 
@@ -116,15 +116,18 @@ class Main
     puts 'Provide new train number in format NNN-NN or NNNNN (N - number or letter): '
     train_number = gets.chomp
     puts "Select cargo (1) or passenger(2) train: "
-    type = gets.chomp
-    if type == '1'
+    type = gets.chomp.to_i
+    if type == 1
       @trains << CargoTrain.new(train_number)
     end
-    if type == '2'
+    if type == 2
       @trains << PassengerTrain.new(train_number)
     end
+    unless (1..2).include?(type)
+      raise "Type of train was entered incorrect! Please enter 1 or 2."
+    end
     puts "Train #{train_number} was created. All trains: #{@trains.join(', ')}"
-  rescue StandardError => e
+  rescue => e
     puts e
     retry
   end
@@ -196,6 +199,9 @@ class Main
       @routes << Route.new(first_station, last_station)
       puts "New route was created. See all available: #{@routes}"
     end
+  rescue => e
+    puts e.message
+    retry
   end
 
   def edit_route

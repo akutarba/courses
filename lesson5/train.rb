@@ -40,11 +40,11 @@ class Train
 
   def initialize(number, type)
     @number = number
-    validate!(number, NUMBER_TEMPLATE)
     @type = type
     @wagons = []
     @current_speed = 0
     @current_station_index = 0
+    validate!
     @@trains[number] = self
     register_instance
   end
@@ -53,11 +53,15 @@ class Train
     @number
   end
 
-  def valid?
-    validate!(self.number, NUMBER_FORMAT)
-  rescue
-    false
+  protected
+
+  def validate!
+    raise 'Train number is nil!' if number.nil?
+    raise 'Wrong format of train number!' if number !~ NUMBER_TEMPLATE
+    raise "Train #{number} is already exist!" unless @@trains[number].nil?
+    true
   end
+
 # Может набирать скорость
   def speed_up(speed_delta)
     @current_speed += speed_delta if speed_delta >= 0
