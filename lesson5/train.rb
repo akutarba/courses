@@ -53,7 +53,7 @@ class Train
     @number
   end
 
-  protected
+
 
   def validate!
     raise 'Train number is nil!' if number.nil?
@@ -61,6 +61,13 @@ class Train
     raise "Train #{number} is already exist!" unless @@trains[number].nil?
     true
   end
+  #  написать метод, который принимает блок и проходит по всем вагонам поезда
+  # (вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
+
+  def each_wagon(&block)
+    self.wagons.each {|wagon| block.call(wagon)} if block_given?
+  end
+
 
 # Может набирать скорость
   def speed_up(speed_delta)

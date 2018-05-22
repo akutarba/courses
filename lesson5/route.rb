@@ -40,7 +40,6 @@ class Route
     end
   end
 
-  protected
 
   def validate!
     raise 'Stations are nil!' if @stations.nil?
