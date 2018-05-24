@@ -20,10 +20,18 @@ class PassengerWagon < Wagon
   end
 
   def take_seat
-    self.taken_seats += 1 if self.taken_seats <= @seats
+    self.taken_seats += 1 if self.taken_seats < @seats
   end
 
   def free_seats
     self.seats - self.taken_seats
+  end
+
+  def free_space
+    "free #{free_seats} seats"
+  end
+
+  def taken_space
+    "taken #{taken_seats} seats"
   end
 end

@@ -65,7 +65,7 @@ class Train
   # (вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
 
   def each_wagon(&block)
-    self.wagons.each {|wagon| block.call(wagon)} if block_given?
+    self.wagons.each_with_index {|wagon, i| yield wagon, i} if block_given?
   end
 
 

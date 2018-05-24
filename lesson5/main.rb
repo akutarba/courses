@@ -115,6 +115,9 @@ class Main
     cargo_wagon_1 = CargoWagon.new(300)
     cargo_wagon_2 = CargoWagon.new(400)
 
+    load_wagon(cargo_wagon_1)
+    load_wagon(pass_wagon_1)
+
     pass_wagon_1.take_seat
     pass_wagon_2.take_seat
 
@@ -343,7 +346,19 @@ class Main
 
 # @!method занимает место или объем в вагоне
 # @!attribute поезд
-  def load_wagon(selected_train = nil, selected_wagon = nil)
+  def load_wagon(wagon)
+    if wagon.type == :passenger
+      wagon.take_seat
+      puts "One seat is taken in passenger wagon #{wagon.number}"
+    elsif wagon.type == :cargo
+      puts "Cargo wagon selected, enter amount to load:"
+      amount = gets.chomp.to_f
+      wagon.take_volume(amount)
+      puts "#{amount}l is loaded in cargo wagon #{wagon.number}"
+    end
+  end
+
+  def load_wagon_in_train
     selected_train ||= select_train
     selected_wagon ||= select_wagon(selected_train)
     if selected_wagon.type == :passenger
@@ -354,13 +369,10 @@ class Main
       amount = gets.chomp.to_f
       selected_wagon.take_volume(amount)
     end
-  rescue NoMethodError
   end
-
-
   def list_all_trains
-    trains.each_with_index do |train, i|
-      puts "#{train.number} (#{i + 1})"
+    trains.each_with_index(1) do |train, i|
+      puts "#{train.number} (#{i})"
     end
   end
 
@@ -371,7 +383,7 @@ class Main
     trains[selection - 1]
   end
 
-  def select_wagon(train = nil)
+  def select_wagon(train)
     list_all_wagons(train)
     puts " Select wagon to load  "
     wagon = gets.chomp.to_i - 1
@@ -381,10 +393,8 @@ class Main
 
   def list_all_wagons(selected_train = nil)
     selected_train ||= select_train
-    i = 0
     selected_train.each_wagon do |wagon|
-      i = i + 1
-      puts "    Wagon number #{wagon.number}, type: #{wagon.type}, #{wagon.free_space_by_wagon_type}, #{wagon.taken_space_by_wagon_type}"
+      puts "    Wagon number #{wagon.number}, type: #{wagon.type}, #{wagon.free_space}, #{wagon.taken_space}"
     end
   end
 

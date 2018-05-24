@@ -52,7 +52,7 @@ class Station
   # написать метод, который принимает блок и проходит по всем поездам на станции, передавая каждый поезд в блок.
 
   def each_train(&block)
-    self.trains.each {|train| block.call(train)} if block_given?
+    self.trains.each {|train| yield train} if block_given?
   end
 
   #Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
