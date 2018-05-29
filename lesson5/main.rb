@@ -320,7 +320,7 @@ class Main
   def select_wagon(train)
     list_all_wagons(train)
     puts ' Select wagon to load  '
-    wagon = gets.chomp.to_i - 1
+    wagon = gets.chomp.to_i -= 1
     train.wagons[wagon]
   end
 
