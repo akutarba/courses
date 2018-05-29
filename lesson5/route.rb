@@ -1,23 +1,14 @@
-=begin
-класс Route (Маршрут):
-    Имеет начальную и конечную станцию, а также список промежуточных станций. Начальная и конечная станции указываютсся при создании маршрута,
-а промежуточные могут добавляться между ними.
-        Может добавлять промежуточную станцию в список
-Может удалять промежуточную станцию из списка
-Может выводить список всех станций по-порядку от начальной до конечной
-=end
 require_relative 'instance_counter'
 require_relative 'validation'
 
 class Route
-
   include InstanceCounter
   include Validation
 
-
   attr_reader :stations
 
-  #  Имеет начальную и конечную станцию, а также список промежуточных станций. Начальная и конечная станции указываютсся при создании маршрута
+  #  Имеет начальную и конечную станцию, а также список промежуточных станций.
+  # Начальная и конечная станции указываютсся при создании маршрута
   def initialize(first_station, last_station)
     @stations = [first_station, last_station]
     validate!
@@ -25,7 +16,7 @@ class Route
   end
 
   def to_s
-    @stations.join(",")
+    @stations.join(',')
   end
 
   #  Может добавлять промежуточную станцию в список
@@ -35,11 +26,8 @@ class Route
 
   # Может удалять промежуточную станцию из списка
   def remove_station(station)
-    if station != @stations.first || station != @stations.last
-      @stations.delete(station)
-    end
+    @stations.delete(station) if station != @stations.first || station != @stations.last
   end
-
 
   def validate!
     raise 'Stations are nil!' if @stations.nil?
@@ -48,6 +36,4 @@ class Route
     end
     true
   end
-
 end
-

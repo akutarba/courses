@@ -1,21 +1,3 @@
-=begin
-
-Класс Train (Поезд):
-Имеет номер (произвольная строка) и тип (грузовой, пассажирский) и количество вагонов, эти данные указываются при создании экземпляра класса
-Может набирать скорость
-Может возвращать текущую скорость
-Может тормозить (сбрасывать скорость до нуля)
-Может возвращать количество вагонов
-
-Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает количество вагонов).
-Прицепка/отцепка вагонов может осуществляться только если поезд не движется.
-Может принимать маршрут следования (объект класса Route).
-При назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте.
-Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад,
-но только на 1 станцию за раз.
-Возвращать предыдущую станцию, текущую, следующую, на основе маршрута
-=end
-
 require_relative 'station'
 require_relative 'route'
 require_relative 'vendor'
@@ -33,9 +15,8 @@ class Train
 
   attr_reader :number, :type, :current_speed, :wagons, :current_station_index
 
-  def self.find (train_number)
+  def self.find(train_number)
     @@trains[train_number]
-
   end
 
   def initialize(number, type)
@@ -53,60 +34,46 @@ class Train
     @number
   end
 
-
-
   def validate!
     raise 'Train number is nil!' if number.nil?
     raise 'Wrong format of train number!' if number !~ NUMBER_TEMPLATE
     raise "Train #{number} is already exist!" unless @@trains[number].nil?
     true
   end
+
   #  написать метод, который принимает блок и проходит по всем вагонам поезда
   # (вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
-
-  def each_wagon(&block)
-    self.wagons.each_with_index {|wagon, i| yield wagon, i} if block_given?
+  def each_wagon
+    wagons.each_with_index { |wagon, i| yield wagon, i } if block_given?
   end
 
-
-# Может набирать скорость
+  # Может набирать скорость
   def speed_up(speed_delta)
     @current_speed += speed_delta if speed_delta >= 0
   end
 
-#  Может тормозить (сбрасывать скорость до нуля)
+  #  Может тормозить (сбрасывать скорость до нуля)
   def brake_train
     @current_speed = 0
   end
 
-#Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает количество вагонов).
-# def attach_wagon
-#   @wagons += 1 if @current_speed == 0
-# end
-
-# возвращает true если тип вагона и поезда совпали
-  def relevant_wagon? (wagon)
+  # возвращает true если тип вагона и поезда совпали
+  def relevant_wagon?(wagon)
     wagon.type == @type
   end
 
-#добавляет в массив вагонов, проверяет на соответствие типа вагона и поезда
+  # добавляет в массив вагонов, проверяет на соответствие типа вагона и поезда
   def add_wagon(wagon)
-    @wagons << wagon if @current_speed == 0 && relevant_wagon?(wagon)
+    @wagons << wagon if @current_speed.zero? && relevant_wagon?(wagon)
   end
 
-# удаляет из массива вагонов
+  # удаляет из массива вагонов
   def remove_wagon(wagon)
     return if @current_speed.nonzero?
     @wagons.delete(wagon)
   end
 
-# Может отцеплять вагоны (старый метод, когда вагоны измерялись в штуках)
-#   def detach_wagon
-#     return if @wagons.zero? || @current_speed.nonzero?
-#     @wagons -= 1
-#   end
-
-#  Может принимать маршрут следования (объект класса Route).
+  #  Может принимать маршрут следования (объект класса Route).
   def route=(route)
     @route = route
     @current_station_index = 0
@@ -114,29 +81,24 @@ class Train
     @route.stations[@current_station_index].add_train(self)
   end
 
-
-# возвращает следующую станцию - объект
+  # возвращает следующую станцию - объект
   def next_station
     @route.stations[@current_station_index + 1]
   end
 
-# возвращает предыдущую станцию - объект
-  def get_previous_station
-    if @current_station_index.nonzero?
-      @route.stations[@current_station_index - 1]
-    end
+  # возвращает предыдущую станцию - объект
+  def previous_station
+    @route.stations[@current_station_index - 1] if @current_station_index.nonzero?
   end
 
   def current_station
     @route.stations[@current_station_index]
   end
 
-
-# Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад,
-# но только на 1 станцию за раз.
+  # Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад,
+  # но только на 1 станцию за раз.
 
   def run_next_station
-
     return if next_station.nil? # если следующая станция не последняя идем дальше, если последняя выходим из метода
 
     # удаляем поезд с текущей станции
@@ -147,11 +109,9 @@ class Train
 
     # добавляем поезд на станцию прибытия
     current_station.add_train(self)
-
   end
 
   def run_previous_station
-
     return if get_previous_station.nil?
 
     # удаляем поезд с текущей станции
@@ -162,13 +122,9 @@ class Train
 
     # добавляем поезд на станцию прибытия
     current_station.add_train(self)
-
   end
-
-  private
 
   def self.trains
     @@trains
   end
 end
-
