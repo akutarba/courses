@@ -74,6 +74,13 @@ class Main
     seed_trains
     seed_routes
 
+    # test for acessors
+
+    train = Train.new('125-01',:passenger)
+    train.number = '126-01'
+    train.number = '127-01'
+
+    print "Train had numbers: #{train.number_history}"
 
     # passwagon = PassengerWagon.new(10)
     # cargowagon = CargoWagon.new(300)
@@ -130,6 +137,7 @@ class Main
     puts "Train #{train_number} was created. All trains: #{@trains.join(', ')}"
   rescue StandardError => e
     puts e
+    retry
   end
 
   def create_wagon

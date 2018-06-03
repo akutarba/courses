@@ -137,10 +137,3 @@ class Train
   end
 end
 
-# test for acessors
-#
-# train = Train.new('125-01',:passenger)
-# train.number = '126-01'
-# train.number = '127-01'
-#
-# print "Train had numbers: #{train.number_history}"
