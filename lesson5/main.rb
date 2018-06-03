@@ -57,7 +57,7 @@ class Main
   attr_accessor :stations, :trains, :routes
 
   def seed_trains
-    @trains.push(PassengerTrain.new(124), CargoTrain.new('M45-01'))
+    @trains.push(PassengerTrain.new('124-01'), CargoTrain.new('M45-01'))
   end
 
   def seed_stations
@@ -70,17 +70,18 @@ class Main
   end
 
   def seed_testdata
+    #This is demo of validation
     seed_stations
     seed_trains
     seed_routes
 
     # test for acessors
-
-    train = Train.new('125-01',:passenger)
+    puts "\nThis is demo of dynamic method _history: "
+    train = Train.new('125-01', :passenger)
     train.number = '126-01'
     train.number = '127-01'
 
-    print "Train had numbers: #{train.number_history}"
+    print "Train had numbers: #{train.number_history}\n"
 
     # passwagon = PassengerWagon.new(10)
     # cargowagon = CargoWagon.new(300)
@@ -136,8 +137,7 @@ class Main
     end
     puts "Train #{train_number} was created. All trains: #{@trains.join(', ')}"
   rescue StandardError => e
-    puts e
-    retry
+    puts e.message
   end
 
   def create_wagon

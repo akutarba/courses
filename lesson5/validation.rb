@@ -37,14 +37,10 @@ module Validation
 
     def type_number(value, klass)
       raise "Wrong class" unless value.is_a?(klass[0])
-    rescue StandardError => e
-      puts "#{e} of type"
     end
 
     def format(value, format)
       raise "Attribute doesn't match required format" unless value.to_s.match(format[0])
-    rescue StandardError => e
-      puts e
     end
   end
 end

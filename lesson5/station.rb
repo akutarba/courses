@@ -25,8 +25,8 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
-    valid?
-    @@stations << self # при инициализации добавляем станцию
+    validate!
+    @@stations << self
     register_instance
   end
 
