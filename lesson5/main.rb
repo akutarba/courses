@@ -57,7 +57,7 @@ class Main
   attr_accessor :stations, :trains, :routes
 
   def seed_trains
-    @trains.push(PassengerTrain.new('124-01'), CargoTrain.new('M45-01'))
+    @trains.push(PassengerTrain.new(124), CargoTrain.new('M45-01'))
   end
 
   def seed_stations
