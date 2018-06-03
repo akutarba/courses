@@ -28,19 +28,19 @@ module Validation
     end
 
     def presence(value, *args)
-      raise "Value can't be nil or empty" if value.nil?
+      raise "Value can't be nil or empty!" if value.nil?
     end
 
     def type(value, klass)
-      raise "Wrong class" unless value.is_a?(klass[0])
+      raise "Wrong class!" unless value.is_a?(klass[0])
     end
 
     def type_number(value, klass)
-      raise "Wrong class" unless value.is_a?(klass[0])
+      raise "Wrong class!" unless value.is_a?(klass[0])
     end
 
     def format(value, format)
-      raise "Attribute doesn't match required format" unless value.to_s.match(format[0])
+      raise "Attribute doesn't match required format!" unless value.to_s.match(format[0])
     end
   end
 end
