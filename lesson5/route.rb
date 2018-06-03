@@ -21,7 +21,7 @@ class Route
     @first_station = first_station
     @last_station = last_station
     @stations = [@first_station, @last_station]
-    validate!
+    valid?
     register_instance
   end
 

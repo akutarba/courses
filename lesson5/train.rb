@@ -29,7 +29,7 @@ class Train
 
   def initialize(number, type)
     @number = number
-    validate!
+    valid?
     @type = type
     @wagons = []
     @current_speed = 0
