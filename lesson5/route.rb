@@ -5,12 +5,22 @@ class Route
   include InstanceCounter
   include Validation
 
-  attr_reader :stations
+  attr_reader :stations, :first_station, :last_station
+
+  validate :first_station, :presence
+  validate :first_station, :type, Station
+  validate :first_station, :format, /[a-z]/
+
+  validate :last_station, :presence
+  validate :last_station, :type, Station
+  validate :last_station, :format, /[a-z]/
 
   #  Имеет начальную и конечную станцию, а также список промежуточных станций.
   # Начальная и конечная станции указываютсся при создании маршрута
   def initialize(first_station, last_station)
-    @stations = [first_station, last_station]
+    @first_station = first_station
+    @last_station = last_station
+    @stations = [@first_station, @last_station]
     validate!
     register_instance
   end
@@ -29,11 +39,11 @@ class Route
     @stations.delete(station) if station != @stations.first || station != @stations.last
   end
 
-  def validate!
-    raise 'Stations are nil!' if @stations.nil?
-    @stations.each_with_index do |item, index|
-      raise "The station ##{index + 1} is not an object!" unless item.instance_of? Station
-    end
-    true
-  end
+  # def validate!
+  #   raise 'Stations are nil!' if @stations.nil?
+  #   @stations.each_with_index do |item, index|
+  #     raise "The station ##{index + 1} is not an object!" unless item.instance_of? Station
+  #   end
+  #   true
+  # end
 end

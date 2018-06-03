@@ -3,17 +3,25 @@ require_relative 'route'
 require_relative 'vendor'
 require_relative 'instance_counter'
 require_relative 'validation'
+require_relative 'acessors'
 
 class Train
   include Vendor
   include InstanceCounter
   include Validation
 
+  extend Acessors
+
   NUMBER_TEMPLATE = /^[a-z\d]{3}-?[a-z\d]{2}$/i
 
   @@trains = {}
 
   attr_reader :number, :type, :current_speed, :wagons, :current_station_index
+  attr_acessor_with_history :number
+
+  validate :number, :presence
+  validate :number, :type_number, String
+  validate :number, :format, NUMBER_TEMPLATE
 
   def self.find(train_number)
     @@trains[train_number]
@@ -21,11 +29,11 @@ class Train
 
   def initialize(number, type)
     @number = number
+    validate!
     @type = type
     @wagons = []
     @current_speed = 0
     @current_station_index = 0
-    validate!
     @@trains[number] = self
     register_instance
   end
@@ -34,12 +42,12 @@ class Train
     @number
   end
 
-  def validate!
-    raise 'Train number is nil!' if number.nil?
-    raise 'Wrong format of train number!' if number !~ NUMBER_TEMPLATE
-    raise "Train #{number} is already exist!" unless @@trains[number].nil?
-    true
-  end
+  # def validate!
+  #   raise 'Train number is nil!' if number.nil?
+  #   raise 'Wrong format of train number!' if number !~ NUMBER_TEMPLATE
+  #   raise "Train #{number} is already exist!" unless @@trains[number].nil?
+  #   true
+  # end
 
   #  написать метод, который принимает блок и проходит по всем вагонам поезда
   # (вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
@@ -128,3 +136,10 @@ class Train
     @@trains
   end
 end
+
+
+train = Train.new('125-01',:passenger)
+train.number = '126-01'
+train.number = '127-01'
+
+print "Train had numbers: #{train.number_history}"

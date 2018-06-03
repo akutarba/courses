@@ -8,6 +8,12 @@ class Station
   NAME_TEMPLATE = /^\w+/
 
   attr_reader :trains, :name
+
+
+  validate :name, :presence
+  validate :name, :type, String
+  validate :name, :format, NAME_TEMPLATE
+
   # заводим инстанс переменную класса куда складываем все станции
   @@stations = []
 
@@ -28,12 +34,12 @@ class Station
     @name
   end
 
-  def validate!
-    raise 'Station name is nil!' if @name.nil?
-    raise 'Wrong format of station name!' if @name !~ NAME_TEMPLATE
-    raise 'There is a station with this name already!' if @@stations.detect { |item| item.name == name }
-    true
-  end
+  # def validate!
+  #   raise 'Station name is nil!' if @name.nil?
+  #   raise 'Wrong format of station name!' if @name !~ NAME_TEMPLATE
+  #   raise 'There is a station with this name already!' if @@stations.detect { |item| item.name == name }
+  #   true
+  # end
 
   # У класса Station:
   # написать метод, который принимает блок и проходит по всем поездам на станции, передавая каждый поезд в блок.

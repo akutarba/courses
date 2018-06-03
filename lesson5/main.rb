@@ -30,11 +30,11 @@ class Main
   end
 
   def run_action(key)
-    available_actions = { '1' => :create_station, '2' => :select_route_stations,
-                          '3' => :edit_route, '4' => :assign_route_to_train,
-                          '5' => :create_train_selection, '6' => :edit_train_wagons,
-                          '7' => :move_train, '8' => :show_all_trains_on_station,
-                          '9' => :goodbye }
+    available_actions = {'1' => :create_station, '2' => :select_route_stations,
+                         '3' => :edit_route, '4' => :assign_route_to_train,
+                         '5' => :create_train_selection, '6' => :edit_train_wagons,
+                         '7' => :move_train, '8' => :show_all_trains_on_station,
+                         '9' => :goodbye}
 
     send(available_actions[key]) || send(:select_actions_menu)
   end
@@ -56,6 +56,10 @@ class Main
 
   attr_accessor :stations, :trains, :routes
 
+  def seed_trains
+    @trains.push(PassengerTrain.new('124-01'), CargoTrain.new('M45-01'))
+  end
+
   def seed_stations
     # Some content for tests
     @stations.push(Station.new('SPb'), Station.new('Munich'))
@@ -67,28 +71,25 @@ class Main
 
   def seed_testdata
     seed_stations
-
-    train1 = PassengerTrain.new('124-01')
-    train2 = CargoTrain.new('M45-01')
-
-    passwagon = PassengerWagon.new(10)
-    cargowagon = CargoWagon.new(300)
-
-    load_wagon(cargowagon)
-    load_wagon(passwagon)
-
-    passwagon.take_seat
-    cargowagon.take_volume(100)
-
-    train1.add_wagon(passwagon)
-    train2.add_wagon(cargowagon)
-
+    seed_trains
     seed_routes
 
-    train1.route = (@routes[0])
-    train2.route = (@routes[1])
 
-    @trains.push(train1, train2)
+    # passwagon = PassengerWagon.new(10)
+    # cargowagon = CargoWagon.new(300)
+    #
+    # load_wagon(cargowagon)
+    # load_wagon(passwagon)
+    #
+    # passwagon.take_seat
+    # cargowagon.take_volume(100)
+    #
+    # train1 = select_from_array(@trains)
+    # train1.add_wagon(passwagon)
+    # train2 = select_from_array(@trains)
+    # train2.add_wagon(cargowagon)
+    # train1.route = (@routes[0])
+    # train2.route = (@routes[1])
   end
 
   def trains_by_station
@@ -129,7 +130,6 @@ class Main
     puts "Train #{train_number} was created. All trains: #{@trains.join(', ')}"
   rescue StandardError => e
     puts e
-    retry
   end
 
   def create_wagon
@@ -147,7 +147,7 @@ class Main
 
   # add wagon to the train according train type
   def edit_train_wagons
-    cases = { 1 => :add_wagon_to_train, 2 => :remove_wagon_from_train }
+    cases = {1 => :add_wagon_to_train, 2 => :remove_wagon_from_train}
     if @trains.empty?
       puts 'There are no trains yet.'
       return
@@ -191,7 +191,7 @@ class Main
       puts 'Select first station of route:'
       first_station = select_from_array(@stations)
       puts 'Select last station of route:'
-      stations = @stations.reject { |item| item == first_station }
+      stations = @stations.reject {|item| item == first_station}
       last_station = select_from_array(stations)
       create_route(first_station, last_station)
     end
@@ -207,7 +207,7 @@ class Main
     if @routes.empty?
       puts 'There are no routes to edit'
     else
-      cases = { 1 => :add_stations_to_route, 2 => :remove_stations_from_route }
+      cases = {1 => :add_stations_to_route, 2 => :remove_stations_from_route}
       puts 'Select action with route: add station(1), remove station(2)'
       action = gets.chomp.to_i
       send(cases[action.to_s]) || incorrect_input
@@ -246,7 +246,7 @@ class Main
       puts 'There are no trains to move. Please, create one.'
     else
       selected_train = select_from_array(@trains)
-      cases = { '1' => :run_next_station, '2' => :run_previous_station }
+      cases = {'1' => :run_next_station, '2' => :run_previous_station}
       puts "Select action for #{selected_train}: move to next(1) or to previous(2) station"
       action = gets.chomp.to_i
 
@@ -335,6 +335,7 @@ end
 app = Main.new
 
 app.seed_testdata
+
 app.select_actions_menu
 
 # app.trains_by_station
