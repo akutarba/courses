@@ -5,22 +5,20 @@ class Route
   include InstanceCounter
   include Validation
 
-  attr_reader :stations, :first_station, :last_station
+  attr_reader :stations
 
   validate :first_station, :presence
   validate :first_station, :type, Station
-  validate :first_station, :format, /[a-z]/
+
 
   validate :last_station, :presence
   validate :last_station, :type, Station
-  validate :last_station, :format, /[a-z]/
+
 
   #  Имеет начальную и конечную станцию, а также список промежуточных станций.
   # Начальная и конечная станции указываютсся при создании маршрута
   def initialize(first_station, last_station)
-    @first_station = first_station
-    @last_station = last_station
-    @stations = [@first_station, @last_station]
+    @stations = [first_station, last_station]
     valid?
     register_instance
   end

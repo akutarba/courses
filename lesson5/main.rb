@@ -30,11 +30,11 @@ class Main
   end
 
   def run_action(key)
-    available_actions = {'1' => :create_station, '2' => :select_route_stations,
-                         '3' => :edit_route, '4' => :assign_route_to_train,
-                         '5' => :create_train_selection, '6' => :edit_train_wagons,
-                         '7' => :move_train, '8' => :show_all_trains_on_station,
-                         '9' => :goodbye}
+    available_actions = { '1' => :create_station, '2' => :select_route_stations,
+                          '3' => :edit_route, '4' => :assign_route_to_train,
+                          '5' => :create_train_selection, '6' => :edit_train_wagons,
+                          '7' => :move_train, '8' => :show_all_trains_on_station,
+                          '9' => :goodbye }
 
     send(available_actions[key]) || send(:select_actions_menu)
   end
@@ -70,7 +70,7 @@ class Main
   end
 
   def seed_testdata
-    #This is demo of validation
+    # This is demo of validation
     seed_stations
     seed_trains
     seed_routes
@@ -155,7 +155,7 @@ class Main
 
   # add wagon to the train according train type
   def edit_train_wagons
-    cases = {1 => :add_wagon_to_train, 2 => :remove_wagon_from_train}
+    cases = { 1 => :add_wagon_to_train, 2 => :remove_wagon_from_train }
     if @trains.empty?
       puts 'There are no trains yet.'
       return
@@ -199,7 +199,7 @@ class Main
       puts 'Select first station of route:'
       first_station = select_from_array(@stations)
       puts 'Select last station of route:'
-      stations = @stations.reject {|item| item == first_station}
+      stations = @stations.reject { |item| item == first_station }
       last_station = select_from_array(stations)
       create_route(first_station, last_station)
     end
@@ -215,7 +215,7 @@ class Main
     if @routes.empty?
       puts 'There are no routes to edit'
     else
-      cases = {1 => :add_stations_to_route, 2 => :remove_stations_from_route}
+      cases = { 1 => :add_stations_to_route, 2 => :remove_stations_from_route }
       puts 'Select action with route: add station(1), remove station(2)'
       action = gets.chomp.to_i
       send(cases[action.to_s]) || incorrect_input
@@ -254,7 +254,7 @@ class Main
       puts 'There are no trains to move. Please, create one.'
     else
       selected_train = select_from_array(@trains)
-      cases = {'1' => :run_next_station, '2' => :run_previous_station}
+      cases = { '1' => :run_next_station, '2' => :run_previous_station }
       puts "Select action for #{selected_train}: move to next(1) or to previous(2) station"
       action = gets.chomp.to_i
 

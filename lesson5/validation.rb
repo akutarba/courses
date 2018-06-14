@@ -9,23 +9,28 @@ module Validation
 
     def validate(name, validation_type, *params)
       @validations ||= []
-      @validations << { name: name, validation_type: validation_type, params: params }
+      @validations << {name: name, validation_type: validation_type, params: params}
     end
   end
 
   module InstanceMethods
     def validate!
-      self.class.validations.each do |validation|
-        validation_value = instance_variable_get("@#{validation[:name]}")
-        send validation[:validation_type], validation_value, validation[:params]
+      unless self.class.validations.nil?
+        self.class.validations.each do |validation|
+          validation_value = instance_variable_get("@#{validation[:name]}")
+          send validation[:validation_type], validation_value, validation[:params]
+        end
       end
     end
 
     def valid?
       validate!
+      true
     rescue RuntimeError
       false
     end
+
+    private
 
     def presence(value, *args)
       raise "Value can't be nil or empty!" if value.nil?
