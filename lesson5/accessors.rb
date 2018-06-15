@@ -23,9 +23,6 @@ module Accessors
     end
   end
 
-  def is_not_a?
-    !is_a?
-  end
 end
 
 class TestAccessors
