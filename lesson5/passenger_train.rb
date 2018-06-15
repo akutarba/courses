@@ -1,10 +1,10 @@
 require_relative '../lesson5/train'
 require_relative 'validation'
-require_relative 'acessors'
+require_relative 'accessors'
 
 class PassengerTrain < Train
   include Validation
-  include Acessors
+  include Accessors
 
   attr_reader :number
 

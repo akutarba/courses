@@ -3,21 +3,21 @@ require_relative 'route'
 require_relative 'vendor'
 require_relative 'instance_counter'
 require_relative 'validation'
-require_relative 'acessors'
+require_relative 'accessors'
 
 class Train
   include Vendor
   include InstanceCounter
   include Validation
 
-  extend Acessors
+  extend Accessors
 
   NUMBER_TEMPLATE = /^[a-z\d]{3}-?[a-z\d]{2}$/i
 
   @@trains = {}
 
   attr_reader :number, :type, :current_speed, :wagons, :current_station_index
-  attr_acessor_with_history :number
+  attr_accessor_with_history :number
 
   validate :number, :presence
   validate :number, :type_number, String

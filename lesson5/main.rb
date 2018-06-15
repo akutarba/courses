@@ -83,6 +83,8 @@ class Main
 
     print "Train had numbers: #{train.number_history}\n"
 
+    puts
+
     # passwagon = PassengerWagon.new(10)
     # cargowagon = CargoWagon.new(300)
     #
@@ -347,3 +349,17 @@ app.seed_testdata
 app.select_actions_menu
 
 # app.trains_by_station
+
+class Test
+  extend Accessors
+
+  attr_accessor_with_history :a
+  strong_attr_accessor :b, Float
+end
+
+test = Test.new
+test.a = 8
+test.a = 9
+test.a = 'hello'
+puts test.a
+puts test.a_history
